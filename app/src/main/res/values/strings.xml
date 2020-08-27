@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">VenueSearchApp</string>
+    <string name="loading">Loading...</string>
+    <string name="enter_venue_to_search">Enter Venue to search</string>
+    <string name="err_no_result_found">No Results Found</string>
+    <string name="msg_please_search">Please Search for Venue</string>
 </resources>

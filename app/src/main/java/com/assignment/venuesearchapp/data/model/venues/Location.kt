@@ -1,8 +1,7 @@
 package com.assignment.venuesearchapp.data.model.venues
 
-
-import com.assignment.venuesearchapp.data.model.venues.LabeledLatLng
 import com.google.gson.annotations.SerializedName
+
 
 data class Location(
     @SerializedName("address")
@@ -13,8 +12,8 @@ data class Location(
     val lat: Double,
     @SerializedName("lng")
     val lng: Double,
-    @SerializedName("labeledLatLngs")
-    val labeledLatLngs: List<LabeledLatLng>,
+//    @SerializedName("labeledLatLngs")
+//    val labeledLatLngs: List<LabeledLatLng>,
     @SerializedName("distance")
     val distance: Int,
     @SerializedName("postalCode")

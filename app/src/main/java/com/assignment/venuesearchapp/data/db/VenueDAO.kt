@@ -12,10 +12,10 @@ interface VenueDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveVenues(venues: List<Venue>)
 
-    @Query("DELETE from venue_database")
+    @Query("DELETE from near_by_venue_search_results")
     suspend fun deleteAllVenues()
 
-    @Query("SELECT * from venue_database")
+    @Query("SELECT * from near_by_venue_search_results")
     suspend fun getVenues(): List<Venue>
 
 }

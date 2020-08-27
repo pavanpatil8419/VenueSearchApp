@@ -14,9 +14,9 @@ data class Venue(
     @SerializedName("name")
     val name: String,
     @SerializedName("location")
-    val location: Location,
-    @SerializedName("categories")
-    val categories: List<Category>,
-    @SerializedName("venuePage")
-    val venuePage: VenuePage
+    val location: Location
+//    @SerializedName("categories")
+//    val categories: List<String>
+//    @SerializedName("venuePage")
+//    val venuePage: VenuePage
 )

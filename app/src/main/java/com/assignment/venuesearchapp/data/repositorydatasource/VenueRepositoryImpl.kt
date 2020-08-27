@@ -22,8 +22,8 @@ class VenueRepositoryImpl(
             if (response.code() == 200) {
                 val body = response.body()
                 body?.let {
-                    Log.i("Sucess response code", "" + response.code())
-                    return it.venues
+                    Log.i("Success response code", "" + response.code())
+                    return it.response.venues
 
                 }
             } else {

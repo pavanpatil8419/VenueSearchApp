@@ -1,7 +1,6 @@
 package com.assignment.venuesearchapp.data.repositorydatasource
 
 import com.assignment.venuesearchapp.data.db.VenueDAO
-import com.assignment.venuesearchapp.data.db.VenueDatabase
 import com.assignment.venuesearchapp.data.model.venues.Venue
 
 class VenueLocalDataSourceImpl(
