@@ -3,7 +3,6 @@ package com.assignment.venuesearchapp.data.repositorydatasource
 import com.assignment.venuesearchapp.data.api.RemoteAPIService
 import com.assignment.venuesearchapp.data.model.venue.details.VenueDetailsResponse
 import com.assignment.venuesearchapp.data.model.venues.SearchResult
-import com.assignment.venuesearchapp.data.model.venues.VenueList
 import retrofit2.Response
 
 class VenueRemoteDataSourceImpl(

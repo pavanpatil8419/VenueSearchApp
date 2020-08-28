@@ -1,7 +1,7 @@
 package com.assignment.venuesearchapp.presentation.venue.details
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,7 +15,7 @@ import com.assignment.venuesearchapp.data.repositorydatasource.VenueRepositoryIm
 import com.assignment.venuesearchapp.databinding.ActivityVenueDetailsBinding
 import com.assignment.venuesearchapp.domain.usecase.GetVenueDetailsUseCase
 import com.assignment.venuesearchapp.util.AppConstants
-import com.assignment.venuesearchapp.util.ConnectivityHelper
+import java.security.acl.Group
 
 class VenueDetailsActivity : AppCompatActivity() {
 
@@ -25,7 +25,7 @@ class VenueDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val venueID: String = intent.getStringExtra(AppConstants.VENUE_ID)
+        val venueID = intent.getStringExtra(AppConstants.VENUE_ID)
         dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_venue_details)
 
         val databaseDAO = VenueDatabase.getInstance(this).getVenueDAO()
@@ -44,17 +44,20 @@ class VenueDetailsActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(VenueDetailsViewModel::class.java)
         dataBinding.lifecycleOwner = this
 
-        viewModel.searchVenue(venueID.toString())
+        viewModel.searchVenue(venueID)
 
         viewModel.venueDetailsLiveData.observe(this, Observer {
-            val venueDetails =  viewModel.venueDetailsLiveData.value
-            if(venueDetails != null) {
-                val imguri =
-                    viewModel.venueDetailsLiveData!!.value!!.photos.groups[0].items[0].prefix +
-                            "300x300" +
-                            viewModel.venueDetailsLiveData!!.value!!.photos.groups[0].items[0].suffix
+            val venueDetails = viewModel.venueDetailsLiveData.value
+            if (venueDetails != null) {
 
-                dataBinding.venuePhotosImageView.setImageURI(imguri)
+                if(!venueDetails.photos.groups.isNullOrEmpty()){
+                    val group = venueDetails.photos.groups[0]
+                    if(!group.items.isNullOrEmpty()){
+                        val item = group.items[0]
+                        val imguri = item.prefix + "400x300" + item.suffix
+                        dataBinding.venuePhotosImageView.setImageURI(imguri)
+                    }
+                }
                 dataBinding.title.text = venueDetails.name
                 dataBinding.descriptionValue.text = venueDetails.description
                 dataBinding.contactInfoValue.text = venueDetails.contact.phone
@@ -91,7 +94,6 @@ class VenueDetailsActivity : AppCompatActivity() {
 //                    viewModel.venueDetailsLiveData.value!!.location.formattedAddress.toString()
 //                dataBinding.venueDetailsLayout.addView(viewGroup3)
 //
-//
 //                val viewGroup4 =
 //                    layoutInflater.inflate(R.layout.venue_details_row_item, null, false)
 //                (viewGroup4.findViewById(R.id.key) as TextView).text =
@@ -99,7 +101,7 @@ class VenueDetailsActivity : AppCompatActivity() {
 //                (viewGroup4.findViewById(R.id.value) as TextView).text =
 //                    viewModel.venueDetailsLiveData.value!!.rating.toString()
 //                dataBinding.venueDetailsLayout.addView(viewGroup4)
-            }else{
+            } else {
                 dataBinding.title.text = getString(R.string.venue_details_not_available)
             }
         })

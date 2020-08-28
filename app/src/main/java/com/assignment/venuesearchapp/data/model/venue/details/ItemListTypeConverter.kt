@@ -10,9 +10,9 @@ class ItemListTypeConverter: Serializable {
     @TypeConverter // note this annotation
     fun fromItemValuesList(items: List<Item> ):String? {
         if (items == null) {
-            return (null);
+            return (null)
         }
-        val gson: Gson = Gson();
+        val gson = Gson()
         val type = object : TypeToken<List<Item>?>() {}.type
         return gson.toJson(items, type)
     }

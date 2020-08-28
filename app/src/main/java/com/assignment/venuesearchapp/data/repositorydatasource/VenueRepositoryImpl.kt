@@ -17,11 +17,10 @@ class VenueRepositoryImpl(
         limitResults: Int
 
     ): List<Venue> {
-        if (ConnectivityHelper.isConnectedToNetwork()) {
-            return fetchNearByVenuesFromRemoteAPI(near, radius, limitResults)
+        return if (ConnectivityHelper.isConnectedToNetwork()) {
+            fetchNearByVenuesFromRemoteAPI(near, radius, limitResults)
         } else {
-            val venueList: List<Venue> = localDataSource.getSavedVenuesFromDB()
-            return venueList
+            localDataSource.getSavedVenuesFromDB()
         }
     }
 
@@ -53,11 +52,11 @@ class VenueRepositoryImpl(
     }
 
     override suspend fun getVenueDetails(venueId: String): VenueDetails? {
-        if (ConnectivityHelper.isConnectedToNetwork()) {
-            return fetchVenueDetailsFromRemoteAPI(venueId)
+        return if (ConnectivityHelper.isConnectedToNetwork()) {
+            fetchVenueDetailsFromRemoteAPI(venueId)
         } else {
             val venue: Venue = localDataSource.getVenueDetailsById(venueId)
-            return venue.venue_details
+            venue.venue_details
         }
     }
 

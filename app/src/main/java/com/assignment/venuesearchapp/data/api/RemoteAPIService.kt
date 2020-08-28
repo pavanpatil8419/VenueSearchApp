@@ -2,7 +2,6 @@ package com.assignment.venuesearchapp.data.api
 
 import com.assignment.venuesearchapp.data.model.venue.details.VenueDetailsResponse
 import com.assignment.venuesearchapp.data.model.venues.SearchResult
-import com.assignment.venuesearchapp.data.model.venues.VenueList
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

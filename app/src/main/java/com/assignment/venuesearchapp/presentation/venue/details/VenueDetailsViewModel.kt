@@ -1,12 +1,9 @@
 package com.assignment.venuesearchapp.presentation.venue.details
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.assignment.venuesearchapp.data.model.venue.details.VenueDetails
-import com.assignment.venuesearchapp.data.model.venues.Venue
 import com.assignment.venuesearchapp.domain.usecase.GetVenueDetailsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

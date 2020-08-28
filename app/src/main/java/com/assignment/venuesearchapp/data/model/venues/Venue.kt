@@ -1,10 +1,8 @@
 package com.assignment.venuesearchapp.data.model.venues
 
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.assignment.venuesearchapp.data.model.venue.details.Contact
 import com.assignment.venuesearchapp.data.model.venue.details.VenueDetails
 import com.google.gson.annotations.SerializedName
 
