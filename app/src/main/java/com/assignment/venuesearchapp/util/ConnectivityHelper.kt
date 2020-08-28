@@ -1,19 +1,46 @@
 package com.assignment.venuesearchapp.util
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.util.Log
 
 
-class ConnectivityHelper {
+class ConnectivityHelper private constructor() {
 
-    fun isConnectedToNetwork(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        var isConnected = false
-        if (connectivityManager != null) {
-            val activeNetwork = connectivityManager.activeNetworkInfo
-            isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
+    companion object {
+
+        private var connectivityHelper: ConnectivityHelper? = null
+        private var context: Context? = null
+
+        fun initialize(appContext: Context) {
+            if(connectivityHelper == null) {
+                connectivityHelper = ConnectivityHelper()
+                this.context = appContext
+            }
         }
-        return isConnected
+
+        fun isConnectedToNetwork(): Boolean {
+        val connectivityManager =
+            context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                    return true
+                }
+            }
+        }
+        return false
     }
+}
 }

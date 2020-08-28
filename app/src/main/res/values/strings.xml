@@ -4,4 +4,11 @@
     <string name="enter_venue_to_search">Enter Venue to search</string>
     <string name="err_no_result_found">No Results Found</string>
     <string name="msg_please_search">Please Search for Venue</string>
+    <string name="contact_info_not_available">Contact information not available</string>
+    <string name="description_label">Description</string>
+    <string name="contact_information_label">Contact Information</string>
+    <string name="address_label">Address</string>
+    <string name="ratings_label">Rating</string>
+    <string name="venue_details_not_available">Venue details not available. Pls try again later</string>
+    <string name="please_wait">Please wait</string>
 </resources>

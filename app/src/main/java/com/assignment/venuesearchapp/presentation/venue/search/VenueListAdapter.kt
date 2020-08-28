@@ -31,8 +31,7 @@ class VenueListAdapter(
 
         fun bind(venue: Venue, clickListener: (Venue) -> Unit) {
             binding.titleTextView.text = venue.name
-            binding.releasedateTextView.text = venue.name
-            //binding.venuePhotoImageView.setImageURI()
+            binding.locaation.text = venue.location.address
             binding.cardView.setOnClickListener {
                 clickListener(venue)
             }

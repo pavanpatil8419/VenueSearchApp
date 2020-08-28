@@ -2,7 +2,6 @@ package com.assignment.venuesearchapp.presentation.venue.details
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,26 +15,30 @@ import com.assignment.venuesearchapp.data.repositorydatasource.VenueRepositoryIm
 import com.assignment.venuesearchapp.databinding.ActivityVenueDetailsBinding
 import com.assignment.venuesearchapp.domain.usecase.GetVenueDetailsUseCase
 import com.assignment.venuesearchapp.util.AppConstants
+import com.assignment.venuesearchapp.util.ConnectivityHelper
 
 class VenueDetailsActivity : AppCompatActivity() {
 
-    private lateinit var dataBinding:ActivityVenueDetailsBinding
-    private lateinit var viewModel:VenueDetailsViewModel
+    private lateinit var dataBinding: ActivityVenueDetailsBinding
+    private lateinit var viewModel: VenueDetailsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val venueID:String = intent.getStringExtra(AppConstants.VENUE_ID)
+        val venueID: String = intent.getStringExtra(AppConstants.VENUE_ID)
         dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_venue_details)
 
         val databaseDAO = VenueDatabase.getInstance(this).getVenueDAO()
         val apiService = RetrofitInstance.getRetrofitInstance(AppConstants.BASE_API_URL)
             .create(RemoteAPIService::class.java)
         val repository = VenueRepositoryImpl(
-            VenueRemoteDataSourceImpl(AppConstants.CLIENT_ID, AppConstants.CLIENT_SECRET, apiService),
+            VenueRemoteDataSourceImpl(
+                AppConstants.CLIENT_ID,
+                AppConstants.CLIENT_SECRET,
+                apiService
+            ),
             VenueLocalDataSourceImpl(databaseDAO)
         )
-
         val getVenueDetailsUseCase = GetVenueDetailsUseCase(repository)
         val viewModelFactory = VenueDetailsViewModelFactory(getVenueDetailsUseCase)
         viewModel = ViewModelProvider(this, viewModelFactory).get(VenueDetailsViewModel::class.java)
@@ -44,33 +47,61 @@ class VenueDetailsActivity : AppCompatActivity() {
         viewModel.searchVenue(venueID.toString())
 
         viewModel.venueDetailsLiveData.observe(this, Observer {
-            //dataBinding.venueposterImageView.setImageURI(AppConstants.BASE_API_URL + viewModel.venueDetailsLiveData!!.)
-            dataBinding.title.text = viewModel.venueDetailsLiveData!!.value!!.name.toString()
-            val viewGroup1 = layoutInflater.inflate(R.layout.venue_details_row_item, null, false)
-            (viewGroup1.findViewById(R.id.key) as TextView).text = "Description"
-            (viewGroup1.findViewById(R.id.value) as TextView).text =
-                viewModel.venueDetailsLiveData.value!!.description
+            val venueDetails =  viewModel.venueDetailsLiveData.value
+            if(venueDetails != null) {
+                val imguri =
+                    viewModel.venueDetailsLiveData!!.value!!.photos.groups[0].items[0].prefix +
+                            "300x300" +
+                            viewModel.venueDetailsLiveData!!.value!!.photos.groups[0].items[0].suffix
 
-            dataBinding.venueDetailsLayout.addView(viewGroup1)
+                dataBinding.venuePhotosImageView.setImageURI(imguri)
+                dataBinding.title.text = venueDetails.name
+                dataBinding.descriptionValue.text = venueDetails.description
+                dataBinding.contactInfoValue.text = venueDetails.contact.phone
+                dataBinding.addressValue.text = venueDetails.location.address
+                dataBinding.ratingValue.text = venueDetails.rating.toString()
 
-            val viewGroup2 = layoutInflater.inflate(R.layout.venue_details_row_item, null, false)
-            (viewGroup2.findViewById(R.id.key) as TextView).text = "Contact Information"
-            (viewGroup2.findViewById(R.id.value) as TextView).text =
-                viewModel.venueDetailsLiveData.value!!.contact.toString()
-            dataBinding.venueDetailsLayout.addView(viewGroup2)
-
-            val viewGroup3 = layoutInflater.inflate(R.layout.venue_details_row_item, null, false)
-            (viewGroup3.findViewById(R.id.key) as TextView).text = "Address"
-            (viewGroup3.findViewById(R.id.value) as TextView).text =
-                viewModel.venueDetailsLiveData.value!!.location.formattedAddress.toString()
-            dataBinding.venueDetailsLayout.addView(viewGroup3)
-
-
-            val viewGroup4 = layoutInflater.inflate(R.layout.venue_details_row_item, null, false)
-            (viewGroup4.findViewById(R.id.key) as TextView).text = "Rating"
-            (viewGroup4.findViewById(R.id.value) as TextView).text =
-                viewModel.venueDetailsLiveData.value!!.rating.toString()
-            dataBinding.venueDetailsLayout.addView(viewGroup4)
+//
+//                val viewGroup1 =
+//                    layoutInflater.inflate(R.layout.venue_details_row_item, null, false)
+//                (viewGroup1.findViewById(R.id.key) as TextView).text =
+//                    getString(R.string.description_label)
+//                (viewGroup1.findViewById(R.id.value) as TextView).text =
+//                    viewModel.venueDetailsLiveData.value!!.description
+//
+//                dataBinding.venueDetailsLayout.addView(viewGroup1)
+//
+//                val viewGroup2 =
+//                    layoutInflater.inflate(R.layout.venue_details_row_item, null, false)
+//                (viewGroup2.findViewById(R.id.key) as TextView).text =
+//                    getString(R.string.contact_information_label)
+//
+//                var contactInfo = viewModel.venueDetailsLiveData.value!!.contact.formattedPhone
+//                if (contactInfo != null && contactInfo.isEmpty()) {
+//                    contactInfo = getString(R.string.contact_info_not_available)
+//                }
+//                (viewGroup2.findViewById(R.id.value) as TextView).text = contactInfo
+//                dataBinding.venueDetailsLayout.addView(viewGroup2)
+//
+//                val viewGroup3 =
+//                    layoutInflater.inflate(R.layout.venue_details_row_item, null, false)
+//                (viewGroup3.findViewById(R.id.key) as TextView).text =
+//                    getString(R.string.address_label)
+//                (viewGroup3.findViewById(R.id.value) as TextView).text =
+//                    viewModel.venueDetailsLiveData.value!!.location.formattedAddress.toString()
+//                dataBinding.venueDetailsLayout.addView(viewGroup3)
+//
+//
+//                val viewGroup4 =
+//                    layoutInflater.inflate(R.layout.venue_details_row_item, null, false)
+//                (viewGroup4.findViewById(R.id.key) as TextView).text =
+//                    getString(R.string.ratings_label)
+//                (viewGroup4.findViewById(R.id.value) as TextView).text =
+//                    viewModel.venueDetailsLiveData.value!!.rating.toString()
+//                dataBinding.venueDetailsLayout.addView(viewGroup4)
+            }else{
+                dataBinding.title.text = getString(R.string.venue_details_not_available)
+            }
         })
     }
 }

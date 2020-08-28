@@ -4,6 +4,7 @@ import android.util.Log
 import com.assignment.venuesearchapp.data.model.venue.details.VenueDetails
 import com.assignment.venuesearchapp.data.model.venues.Venue
 import com.assignment.venuesearchapp.domain.repository.VenueRepository
+import com.assignment.venuesearchapp.util.ConnectivityHelper
 
 class VenueRepositoryImpl(
     private val remoteDataSource: VenueRemoteDataSource,
@@ -14,6 +15,21 @@ class VenueRepositoryImpl(
         near: String,
         radius: String,
         limitResults: Int
+
+    ): List<Venue> {
+        if (ConnectivityHelper.isConnectedToNetwork()) {
+            return fetchNearByVenuesFromRemoteAPI(near, radius, limitResults)
+        } else {
+            val venueList: List<Venue> = localDataSource.getSavedVenuesFromDB()
+            return venueList
+        }
+    }
+
+    private suspend fun fetchNearByVenuesFromRemoteAPI(
+        near: String,
+        radius: String,
+        limitResults: Int
+
     ): List<Venue> {
 
         val venueList = listOf<Venue>()
@@ -22,7 +38,8 @@ class VenueRepositoryImpl(
             if (response.code() == 200) {
                 val body = response.body()
                 body?.let {
-                    Log.i("Success response code", "" + response.code())
+                    localDataSource.clearAllFromDB()
+                    localDataSource.saveVenueToDB(it.response.venues)
                     return it.response.venues
 
                 }
@@ -36,11 +53,22 @@ class VenueRepositoryImpl(
     }
 
     override suspend fun getVenueDetails(venueId: String): VenueDetails? {
+        if (ConnectivityHelper.isConnectedToNetwork()) {
+            return fetchVenueDetailsFromRemoteAPI(venueId)
+        } else {
+            val venue: Venue = localDataSource.getVenueDetailsById(venueId)
+            return venue.venue_details
+        }
+    }
+
+
+    private suspend fun fetchVenueDetailsFromRemoteAPI(venueId: String): VenueDetails? {
         try {
             val response = remoteDataSource.getVenueDetails(venueId)
             if (response.code() == 200) {
                 val body = response.body()
                 body?.let {
+                    localDataSource.updateVenueDetailsById(venueId, it.response.venueDetails)
                     Log.i("Sucess response code", "" + response.code())
                     return it.response.venueDetails
                 }

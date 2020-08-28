@@ -1,6 +1,7 @@
 package com.assignment.venuesearchapp.data.repositorydatasource
 
 import com.assignment.venuesearchapp.data.db.VenueDAO
+import com.assignment.venuesearchapp.data.model.venue.details.VenueDetails
 import com.assignment.venuesearchapp.data.model.venues.Venue
 
 class VenueLocalDataSourceImpl(
@@ -12,10 +13,19 @@ class VenueLocalDataSourceImpl(
     }
 
     override suspend fun saveVenueToDB(venueList: List<Venue>) {
-        return venueDAO.saveVenues(venueList)
+        venueDAO.saveVenues(venueList)
     }
 
     override suspend fun clearAllFromDB() {
-        return venueDAO.deleteAllVenues()
+        venueDAO.deleteAllVenues()
     }
+
+    override suspend fun updateVenueDetailsById(venueID: String, venueDetails: VenueDetails) {
+        venueDAO.updateVenueById(venueID,venueDetails)
+    }
+
+    override suspend fun getVenueDetailsById(venueID: String):Venue {
+        return venueDAO.getVenueById(venueID)
+    }
+
 }
