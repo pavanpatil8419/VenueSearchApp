@@ -1,10 +1,13 @@
 package com.assignment.venuesearchapp.data.repositorydatasource
 
 import android.util.Log
+import com.assignment.venuesearchapp.data.model.ErrorResponse
 import com.assignment.venuesearchapp.data.model.venue.details.VenueDetails
 import com.assignment.venuesearchapp.data.model.venues.Venue
 import com.assignment.venuesearchapp.domain.repository.VenueRepository
 import com.assignment.venuesearchapp.util.ConnectivityHelper
+import com.google.gson.GsonBuilder
+
 
 class VenueRepositoryImpl(
     private val remoteDataSource: VenueRemoteDataSource,
@@ -34,16 +37,26 @@ class VenueRepositoryImpl(
         val venueList = listOf<Venue>()
         try {
             val response = remoteDataSource.searchVenues(near, radius, limitResults)
-            if (response.code() == 200) {
+            if (response.isSuccessful) {
                 val body = response.body()
                 body?.let {
                     localDataSource.clearAllFromDB()
                     localDataSource.saveVenueToDB(it.response.venues)
                     return it.response.venues
-
                 }
             } else {
-                Log.i("Error response", "" + response.code())
+                val body = response.errorBody()
+                body?.let {
+                    val gson = GsonBuilder().create()
+                    val errorResponse = gson.fromJson(body.string(), ErrorResponse::class.java)
+                    errorResponse?.let {
+                        Log.i(
+                            "Error Response:: ",
+                            " Code - ${errorResponse.meta.code} " +
+                                    "Error Details - ${errorResponse.meta.errorDetail} " +
+                                    "ErrorType -${errorResponse.meta.errorType} " )
+                    }
+                }
             }
         } catch (exception: Exception) {
             exception.printStackTrace()

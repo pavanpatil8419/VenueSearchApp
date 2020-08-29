@@ -23,6 +23,7 @@ import com.assignment.venuesearchapp.databinding.ActivityMainBinding
 import com.assignment.venuesearchapp.domain.usecase.SearchVenueUseCase
 import com.assignment.venuesearchapp.presentation.venue.details.VenueDetailsActivity
 import com.assignment.venuesearchapp.util.AppConstants
+import kotlinx.coroutines.Dispatchers
 
 class MainActivity : AppCompatActivity() {
     private var searchText: String = ""
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val searchVenueUseCase = SearchVenueUseCase(repository)
-        val viewModelFactory = VenueViewModelFactory(searchVenueUseCase)
+        val viewModelFactory = VenueViewModelFactory(searchVenueUseCase, Dispatchers.IO, Dispatchers.Main)
         viewModel = ViewModelProvider(this, viewModelFactory).get(VenueViewModel::class.java)
         dataBinding.lifecycleOwner = this
 
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_SEARCH) {
                 val enteredText = dataBinding.editTextSearch.text.toString().trim()
                 if (enteredText.isNotEmpty() && enteredText.trim() != this.searchText.trim()) {
-                    searchText = "Chicago, IL" //enteredText
+                    searchText = enteredText
                     dataBinding.progressBar.visibility = View.VISIBLE
                     dataBinding.emptyTextView.visibility = View.GONE
                     hideKeyboard()

@@ -32,6 +32,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -80,4 +84,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     implementation 'com.facebook.fresco:fresco:2.0.0'
+
+    testImplementation "io.mockk:mockk:1.10.0"
+    testImplementation "android.arch.core:core-testing:1.1.1"
 }

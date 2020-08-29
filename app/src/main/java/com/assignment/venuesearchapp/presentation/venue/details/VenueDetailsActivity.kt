@@ -54,7 +54,7 @@ class VenueDetailsActivity : AppCompatActivity() {
                     val group = venueDetails.photos.groups[0]
                     if(!group.items.isNullOrEmpty()){
                         val item = group.items[0]
-                        val imguri = item.prefix + "400x300" + item.suffix
+                        val imguri = item.prefix + "300x500" + item.suffix
                         dataBinding.venuePhotosImageView.setImageURI(imguri)
                     }
                 }
@@ -64,43 +64,6 @@ class VenueDetailsActivity : AppCompatActivity() {
                 dataBinding.addressValue.text = venueDetails.location.address
                 dataBinding.ratingValue.text = venueDetails.rating.toString()
 
-//
-//                val viewGroup1 =
-//                    layoutInflater.inflate(R.layout.venue_details_row_item, null, false)
-//                (viewGroup1.findViewById(R.id.key) as TextView).text =
-//                    getString(R.string.description_label)
-//                (viewGroup1.findViewById(R.id.value) as TextView).text =
-//                    viewModel.venueDetailsLiveData.value!!.description
-//
-//                dataBinding.venueDetailsLayout.addView(viewGroup1)
-//
-//                val viewGroup2 =
-//                    layoutInflater.inflate(R.layout.venue_details_row_item, null, false)
-//                (viewGroup2.findViewById(R.id.key) as TextView).text =
-//                    getString(R.string.contact_information_label)
-//
-//                var contactInfo = viewModel.venueDetailsLiveData.value!!.contact.formattedPhone
-//                if (contactInfo != null && contactInfo.isEmpty()) {
-//                    contactInfo = getString(R.string.contact_info_not_available)
-//                }
-//                (viewGroup2.findViewById(R.id.value) as TextView).text = contactInfo
-//                dataBinding.venueDetailsLayout.addView(viewGroup2)
-//
-//                val viewGroup3 =
-//                    layoutInflater.inflate(R.layout.venue_details_row_item, null, false)
-//                (viewGroup3.findViewById(R.id.key) as TextView).text =
-//                    getString(R.string.address_label)
-//                (viewGroup3.findViewById(R.id.value) as TextView).text =
-//                    viewModel.venueDetailsLiveData.value!!.location.formattedAddress.toString()
-//                dataBinding.venueDetailsLayout.addView(viewGroup3)
-//
-//                val viewGroup4 =
-//                    layoutInflater.inflate(R.layout.venue_details_row_item, null, false)
-//                (viewGroup4.findViewById(R.id.key) as TextView).text =
-//                    getString(R.string.ratings_label)
-//                (viewGroup4.findViewById(R.id.value) as TextView).text =
-//                    viewModel.venueDetailsLiveData.value!!.rating.toString()
-//                dataBinding.venueDetailsLayout.addView(viewGroup4)
             } else {
                 dataBinding.title.text = getString(R.string.venue_details_not_available)
             }
