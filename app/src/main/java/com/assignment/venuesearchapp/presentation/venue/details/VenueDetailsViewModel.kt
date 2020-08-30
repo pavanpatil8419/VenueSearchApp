@@ -5,25 +5,45 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.assignment.venuesearchapp.data.model.venue.details.VenueDetails
 import com.assignment.venuesearchapp.domain.usecase.GetVenueDetailsUseCase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
-class VenueDetailsViewModel (private val venueDetailsUseCase: GetVenueDetailsUseCase): ViewModel() {
+class VenueDetailsViewModel(
+    private val venueDetailsUseCase: GetVenueDetailsUseCase,
+    ioDispatcher: CoroutineDispatcher,
+    mainDispatcher: CoroutineDispatcher,
+    private val isNetworkAvailable:Boolean
+) : ViewModel() {
 
     private var venueDetails = MutableLiveData<VenueDetails>()
 
     val venueDetailsLiveData: LiveData<VenueDetails>
         get() = venueDetails
 
+    private val job = SupervisorJob()
+    private val ioScope = CoroutineScope(ioDispatcher + job)
+    private val uiScope = CoroutineScope(mainDispatcher + job)
 
-    fun searchVenue( venueID:String){
-        CoroutineScope(Dispatchers.IO).launch {
-            val venue = venueDetailsUseCase.getVenueDetails(venueID)
-            withContext(Dispatchers.Main) {
-                venueDetails.value = venue
+
+    fun searchVenue(venueID: String) {
+
+        uiScope.launch {
+            try {
+                val data = ioScope.async {
+                    return@async venueDetailsUseCase.getVenueDetails(
+                        venueID,
+                        isNetworkAvailable
+                    )
+                }.await()
+                venueDetails.value = data
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        this.job.cancel()
+    }
+
 }

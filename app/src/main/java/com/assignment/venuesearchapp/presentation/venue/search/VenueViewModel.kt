@@ -10,8 +10,9 @@ import kotlinx.coroutines.*
 
 class VenueViewModel(
     private val searchVenueUseCase: SearchVenueUseCase,
-    private val ioDispatcher: CoroutineDispatcher,
-    private val mainDispatcher: CoroutineDispatcher
+    ioDispatcher: CoroutineDispatcher,
+    mainDispatcher: CoroutineDispatcher,
+    private val isNetworkAvailable: Boolean
 ) : ViewModel() {
 
     private var venueList = MutableLiveData<List<Venue>>()
@@ -19,7 +20,6 @@ class VenueViewModel(
         get() = venueList
 
     private val job = SupervisorJob()
-    // IO Scope, it will use a IO thread pool
     private val ioScope = CoroutineScope(ioDispatcher + job)
     private val uiScope = CoroutineScope(mainDispatcher + job)
 
@@ -42,7 +42,8 @@ class VenueViewModel(
                     return@async searchVenueUseCase.searchNearByVenues(
                         searchText,
                         AppConstants.SEARCH_RADIUS,
-                        AppConstants.LIMIT_RESULT
+                        AppConstants.LIMIT_RESULT,
+                        isNetworkAvailable
                     )
                 }.await()
                 venueList.value = data

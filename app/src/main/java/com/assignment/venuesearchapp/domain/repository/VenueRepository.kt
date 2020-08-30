@@ -5,8 +5,8 @@ import com.assignment.venuesearchapp.data.model.venues.Venue
 
 interface VenueRepository {
 
-    suspend fun searchNearByVenues(near: String, radius: String, limitResults: Int): List<Venue>
+    suspend fun searchNearByVenues(near: String, radius: String, limitResults: Int, isNetworkAvailable: Boolean): List<Venue>
 
-    suspend fun getVenueDetails(venueId: String): VenueDetails?
+    suspend fun getVenueDetails(venueId: String, isNetworkAvailable: Boolean): VenueDetails?
 
 }

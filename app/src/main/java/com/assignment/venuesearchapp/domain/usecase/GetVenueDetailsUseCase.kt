@@ -5,6 +5,6 @@ import com.assignment.venuesearchapp.domain.repository.VenueRepository
 
 class GetVenueDetailsUseCase(private val repository: VenueRepository) {
 
-    suspend fun getVenueDetails(venueId: String)
-            : VenueDetails? = repository.getVenueDetails(venueId)
+    suspend fun getVenueDetails(venueId: String, isNetworkAvailable:Boolean)
+            : VenueDetails? = repository.getVenueDetails(venueId, isNetworkAvailable)
 }

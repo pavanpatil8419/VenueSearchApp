@@ -15,7 +15,8 @@ import com.assignment.venuesearchapp.data.repositorydatasource.VenueRepositoryIm
 import com.assignment.venuesearchapp.databinding.ActivityVenueDetailsBinding
 import com.assignment.venuesearchapp.domain.usecase.GetVenueDetailsUseCase
 import com.assignment.venuesearchapp.util.AppConstants
-import java.security.acl.Group
+import com.assignment.venuesearchapp.util.ConnectivityHelper
+import kotlinx.coroutines.Dispatchers
 
 class VenueDetailsActivity : AppCompatActivity() {
 
@@ -40,7 +41,12 @@ class VenueDetailsActivity : AppCompatActivity() {
             VenueLocalDataSourceImpl(databaseDAO)
         )
         val getVenueDetailsUseCase = GetVenueDetailsUseCase(repository)
-        val viewModelFactory = VenueDetailsViewModelFactory(getVenueDetailsUseCase)
+        val viewModelFactory = VenueDetailsViewModelFactory(
+            getVenueDetailsUseCase,
+            Dispatchers.IO,
+            Dispatchers.Main,
+            ConnectivityHelper.isConnectedToNetwork(this)
+        )
         viewModel = ViewModelProvider(this, viewModelFactory).get(VenueDetailsViewModel::class.java)
         dataBinding.lifecycleOwner = this
 
@@ -50,9 +56,9 @@ class VenueDetailsActivity : AppCompatActivity() {
             val venueDetails = viewModel.venueDetailsLiveData.value
             if (venueDetails != null) {
 
-                if(!venueDetails.photos.groups.isNullOrEmpty()){
+                if (!venueDetails.photos.groups.isNullOrEmpty()) {
                     val group = venueDetails.photos.groups[0]
-                    if(!group.items.isNullOrEmpty()){
+                    if (!group.items.isNullOrEmpty()) {
                         val item = group.items[0]
                         val imguri = item.prefix + "300x500" + item.suffix
                         dataBinding.venuePhotosImageView.setImageURI(imguri)

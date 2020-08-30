@@ -8,7 +8,7 @@ import com.assignment.venuesearchapp.R
 import com.assignment.venuesearchapp.data.model.venues.Venue
 import com.assignment.venuesearchapp.databinding.ListItemViewBinding
 
-class VenueListAdapter(
+class VenueListAdapter (
     private var venueList: List<Venue>,
     private val clickListener: (Venue) -> Unit
 ) : RecyclerView.Adapter<VenueListAdapter.VenueViewHolder>() {

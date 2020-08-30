@@ -2,11 +2,11 @@ package com.assignment.venuesearchapp.presentation.venue.search
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +23,7 @@ import com.assignment.venuesearchapp.databinding.ActivityMainBinding
 import com.assignment.venuesearchapp.domain.usecase.SearchVenueUseCase
 import com.assignment.venuesearchapp.presentation.venue.details.VenueDetailsActivity
 import com.assignment.venuesearchapp.util.AppConstants
+import com.assignment.venuesearchapp.util.ConnectivityHelper
 import kotlinx.coroutines.Dispatchers
 
 class MainActivity : AppCompatActivity() {
@@ -40,12 +41,23 @@ class MainActivity : AppCompatActivity() {
         val apiService = RetrofitInstance.getRetrofitInstance(AppConstants.BASE_API_URL)
             .create(RemoteAPIService::class.java)
         val repository = VenueRepositoryImpl(
-            VenueRemoteDataSourceImpl(AppConstants.CLIENT_ID, AppConstants.CLIENT_SECRET, apiService),
-        VenueLocalDataSourceImpl(databaseDAO))
+            VenueRemoteDataSourceImpl(
+                AppConstants.CLIENT_ID,
+                AppConstants.CLIENT_SECRET,
+                apiService
+            ),
+            VenueLocalDataSourceImpl(databaseDAO)
+        )
 
 
         val searchVenueUseCase = SearchVenueUseCase(repository)
-        val viewModelFactory = VenueViewModelFactory(searchVenueUseCase, Dispatchers.IO, Dispatchers.Main)
+        val viewModelFactory = VenueViewModelFactory(
+            searchVenueUseCase,
+            Dispatchers.IO,
+            Dispatchers.Main,
+            ConnectivityHelper.isConnectedToNetwork(this)
+        )
+
         viewModel = ViewModelProvider(this, viewModelFactory).get(VenueViewModel::class.java)
         dataBinding.lifecycleOwner = this
 
@@ -76,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         dataBinding.venueListRecyclerView.adapter =
             VenueListAdapter(
                 listOf(),
-                clickListener = { selectedVenue: Venue -> listItemClicked(selectedVenue) } )
+                clickListener = { selectedVenue: Venue -> listItemClicked(selectedVenue) })
 
         viewModel.venueListData.observe(this, Observer {
 
@@ -100,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun listItemClicked(venue: Venue) {
+    fun listItemClicked(venue: Venue) {
         val intent = Intent(this, VenueDetailsActivity::class.java)
         intent.putExtra(AppConstants.VENUE_ID, venue.id)
         startActivity(intent)

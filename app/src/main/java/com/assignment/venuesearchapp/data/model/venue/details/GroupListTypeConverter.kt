@@ -16,7 +16,7 @@ class GroupListTypeConverter : Serializable {
         val type = object : TypeToken<List<Group>?>() {}.type
         return gson.toJson(groups, type)
     }
-
+    
     @TypeConverter // note this annotation
     fun toGroupValueList(groupListValueString: String?): List<Group>? {
         if (groupListValueString == null) {

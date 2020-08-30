@@ -7,9 +7,10 @@ class SearchVenueUseCase(private val repository: VenueRepository) {
 
     suspend fun searchNearByVenues(
         near: String, radius: String,
-        limitResults: Int
+        limitResults: Int,
+        isNetworkAvailable:Boolean
     ): List<Venue>{
-      return repository.searchNearByVenues(near, radius, limitResults)
+      return repository.searchNearByVenues(near, radius, limitResults, isNetworkAvailable)
     }
 
 }
