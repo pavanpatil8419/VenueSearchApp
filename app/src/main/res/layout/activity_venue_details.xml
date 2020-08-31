@@ -16,12 +16,12 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/venue_photos_image_view"
-                android:layout_width="250dp"
+                android:layout_width="360dp"
                 android:layout_height="250dp"
                 android:layout_gravity="center"
                 android:padding="@dimen/component_padding"
-                app:placeholderImage="@drawable/placeholder"
-                fresco:actualImageScaleType="focusCrop" />
+                app:placeholderImage="@drawable/placeholder_image"
+                fresco:actualImageScaleType="centerCrop" />
 
             <TextView
                 android:id="@+id/title"

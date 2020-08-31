@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         dataBinding.editTextSearch.setOnEditorActionListener { _, i, _ ->
             if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_SEARCH) {
                 val enteredText = dataBinding.editTextSearch.text.toString().trim()
-                if (enteredText.isNotEmpty() && enteredText.trim() != this.searchText.trim()) {
+                if (enteredText.isNotEmpty()){ //{ && enteredText.trim() != this.searchText.trim()) {
                     searchText = enteredText
                     dataBinding.progressBar.visibility = View.VISIBLE
                     dataBinding.emptyTextView.visibility = View.GONE
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun listItemClicked(venue: Venue) {
+    private fun listItemClicked(venue: Venue) {
         val intent = Intent(this, VenueDetailsActivity::class.java)
         intent.putExtra(AppConstants.VENUE_ID, venue.id)
         startActivity(intent)

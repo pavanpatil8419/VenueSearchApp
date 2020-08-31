@@ -58,7 +58,7 @@
             android:paddingTop="15dp"
             android:paddingRight="10dp"
             android:paddingBottom="5dp"
-            android:text="@string/err_no_result_found"
+            android:text="@string/msg_please_search"
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="gone" />

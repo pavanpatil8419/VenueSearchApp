@@ -11,11 +11,11 @@ interface RemoteAPIService {
 
     @GET("venues/search")
     suspend fun searchVenue(
-        @Query("client_id") clientId: String,
-        @Query("client_secret") clientSecret: String,
         @Query("near") near: String,
         @Query("radius") radius: String,
         @Query("limit") limitResults: Int,
+        @Query("client_id") clientId: String,
+        @Query("client_secret") clientSecret: String,
         @Query("v") version:String
     ): Response<SearchResult>
 

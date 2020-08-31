@@ -14,8 +14,8 @@ import retrofit2.Response
 
 class VenueRepositoryImplTest {
 
-    private lateinit var remoteDataSource: VenueRemoteDataSource
-    private lateinit var localDataSource: VenueLocalDataSource
+    private lateinit var remoteDataSource: VenueRemoteDataSourceImpl
+    private lateinit var localDataSource: VenueLocalDataSourceImpl
     private lateinit var venueRepositoryImpl: VenueRepositoryImpl
 
     private val searchText = "SearchText"
@@ -39,6 +39,31 @@ class VenueRepositoryImplTest {
     }
 
     @Test
+    fun `venue details network not available`() = runBlockingTest{
+        coEvery{localDataSource.getVenueDetailsById(venueId)} returns Venue (
+            venueId,
+            "Test Venue",
+            mockk(),
+            mockk()
+        )
+        venueRepositoryImpl.getVenueDetails(venueId,false)
+        coVerify { localDataSource.getVenueDetailsById(venueId)}
+
+    }
+
+    @Test
+    fun `search venue network not available`() = runBlockingTest{
+        coEvery{localDataSource.getSavedVenuesFromDB()} returns listOf(
+                Venue("1", "Venue_1", location = mockk()),
+        Venue("2", "Venue_2", location = mockk()),
+        Venue("3", "Venue_3", location = mockk()))
+
+        val venueList = venueRepositoryImpl.searchNearByVenues(searchText, radius, limit, false)
+        coVerify { localDataSource.getSavedVenuesFromDB()}
+        assertEquals(venueList.size, 3)
+
+    }
+    @Test
     fun `venues details remote api call success`() = runBlockingTest {
         venueDetailsSuccessResponse()
         val response = venueRepositoryImpl.getVenueDetails(venueId,true)
@@ -58,6 +83,7 @@ class VenueRepositoryImplTest {
     }
 
     @Test
+    @Throws(Exception::class)
     fun `search venues remote api call success`() = runBlockingTest {
         searchVenueSuccessResponse()
         val response = venueRepositoryImpl.searchNearByVenues(searchText, radius, limit, true)
@@ -129,13 +155,11 @@ class VenueRepositoryImplTest {
     private fun searchVenuesFailure(){
         coEvery { remoteDataSource.searchVenues(any(),any(),any())} returns searchResultResponse
         coEvery { searchResultResponse.isSuccessful } returns  false
-//        coEvery { venueRepositoryImpl.errorResponse(errorResponse)} returns mockk<ErrorResponse>()
         coEvery { searchResultResponse.errorBody().toString()} returns errorResponse
     }
     private fun venueDetailsFailure(){
         coEvery { remoteDataSource.getVenueDetails(any())} returns venueDetailsResponse
         coEvery { venueDetailsResponse.isSuccessful } returns  false
-        //coEvery { venueRepositoryImpl.errorResponse(errorResponse)} returns mockk<ErrorResponse>()
         coEvery { venueDetailsResponse.errorBody().toString()} returns errorResponse
     }
 }

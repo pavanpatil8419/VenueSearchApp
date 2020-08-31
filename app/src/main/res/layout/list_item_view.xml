@@ -21,15 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-<!--            <com.facebook.drawee.view.SimpleDraweeView-->
-<!--                android:id="@+id/venue_photo_image_view"-->
-<!--                android:layout_width="100dp"-->
-<!--                android:layout_height="100dp"-->
-<!--                android:layout_centerVertical="true"-->
-<!--                android:padding="@dimen/component_padding"-->
-<!--                app:actualImageScaleType="fitXY"-->
-<!--                app:placeholderImage="@drawable/placeholder" />-->
-
             <TextView
                 android:id="@+id/title_text_view"
                 android:layout_width="match_parent"

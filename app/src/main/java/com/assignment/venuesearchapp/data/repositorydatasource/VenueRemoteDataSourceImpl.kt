@@ -3,6 +3,7 @@ package com.assignment.venuesearchapp.data.repositorydatasource
 import com.assignment.venuesearchapp.data.api.RemoteAPIService
 import com.assignment.venuesearchapp.data.model.venue.details.VenueDetailsResponse
 import com.assignment.venuesearchapp.data.model.venues.SearchResult
+import com.assignment.venuesearchapp.util.AppConstants
 import retrofit2.Response
 
 class VenueRemoteDataSourceImpl(
@@ -16,16 +17,21 @@ class VenueRemoteDataSourceImpl(
         limitResults: Int
     ): Response<SearchResult> {
         return apiService.searchVenue(
-            clientID,
-            clientSecret,
             near,
             radius,
             limitResults,
-            "20201130"
+            AppConstants.CLIENT_ID,
+            AppConstants.CLIENT_SECRET,
+            AppConstants.API_VERSION_VALID_DATE
         )
     }
 
     override suspend fun getVenueDetails(venueId: String): Response<VenueDetailsResponse> {
-        return apiService.getVenueDetails(venueId, clientID, clientSecret, "20201130")
+        return apiService.getVenueDetails(
+            venueId,
+            clientID,
+            clientSecret,
+            AppConstants.API_VERSION_VALID_DATE
+        )
     }
 }

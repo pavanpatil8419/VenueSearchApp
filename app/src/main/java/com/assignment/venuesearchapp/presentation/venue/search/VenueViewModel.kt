@@ -28,15 +28,7 @@ class VenueViewModel(
     }
 
     fun searchVenue(searchText: String) {
-
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val venues = searchVenueUseCase.searchNearByVenues(searchtext, radius, limit)
-//            withContext(Dispatchers.Main) {
-//                venueList.value = venues
-//            }
-//        }
         uiScope.launch {
-            venueList.value = listOf()
             try {
                 val data = ioScope.async {
                     return@async searchVenueUseCase.searchNearByVenues(
