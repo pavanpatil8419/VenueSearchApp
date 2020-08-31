@@ -11,8 +11,7 @@ import kotlinx.coroutines.*
 class VenueViewModel(
     private val searchVenueUseCase: SearchVenueUseCase,
     ioDispatcher: CoroutineDispatcher,
-    mainDispatcher: CoroutineDispatcher,
-    private val isNetworkAvailable: Boolean
+    mainDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private var venueList = MutableLiveData<List<Venue>>()
@@ -27,7 +26,7 @@ class VenueViewModel(
         venueList.value = listOf()
     }
 
-    fun searchVenue(searchText: String) {
+    fun searchVenue(searchText: String, isNetworkAvailable:Boolean) {
         uiScope.launch {
             try {
                 val data = ioScope.async {

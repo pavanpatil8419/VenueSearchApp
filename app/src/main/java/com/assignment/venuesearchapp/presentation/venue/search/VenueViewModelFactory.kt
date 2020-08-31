@@ -9,12 +9,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 class VenueViewModelFactory(
     private val searchVenueUseCase: SearchVenueUseCase,
     private val ioDispatcher: CoroutineDispatcher,
-    private val mainDispatcher: CoroutineDispatcher,
-    private val isNetworkAvailable:Boolean
+    private val mainDispatcher: CoroutineDispatcher
 ) : ViewModelProvider.Factory {
 
     @VisibleForTesting
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return VenueViewModel(searchVenueUseCase, ioDispatcher, mainDispatcher, isNetworkAvailable) as T
+        return VenueViewModel(searchVenueUseCase, ioDispatcher, mainDispatcher) as T
     }
 }

@@ -10,8 +10,7 @@ import kotlinx.coroutines.*
 class VenueDetailsViewModel(
     private val venueDetailsUseCase: GetVenueDetailsUseCase,
     ioDispatcher: CoroutineDispatcher,
-    mainDispatcher: CoroutineDispatcher,
-    private val isNetworkAvailable:Boolean
+    mainDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private var venueDetails = MutableLiveData<VenueDetails>()
@@ -24,7 +23,7 @@ class VenueDetailsViewModel(
     private val uiScope = CoroutineScope(mainDispatcher + job)
 
 
-    fun searchVenue(venueID: String) {
+    fun searchVenue(venueID: String, isNetworkAvailable:Boolean ) {
 
         uiScope.launch {
             try {

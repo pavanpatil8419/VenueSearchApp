@@ -54,8 +54,7 @@ class MainActivity : AppCompatActivity() {
         val viewModelFactory = VenueViewModelFactory(
             searchVenueUseCase,
             Dispatchers.IO,
-            Dispatchers.Main,
-            ConnectivityHelper.isConnectedToNetwork(this)
+            Dispatchers.Main
         )
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(VenueViewModel::class.java)
@@ -69,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                     dataBinding.progressBar.visibility = View.VISIBLE
                     dataBinding.emptyTextView.visibility = View.GONE
                     hideKeyboard()
-                    viewModel.searchVenue(searchText)
+                    viewModel.searchVenue(searchText, ConnectivityHelper.isConnectedToNetwork(this))
                 }
             }
             true

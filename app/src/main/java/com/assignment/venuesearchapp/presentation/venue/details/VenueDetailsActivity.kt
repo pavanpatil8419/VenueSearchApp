@@ -1,6 +1,10 @@
 package com.assignment.venuesearchapp.presentation.venue.details
 
+import android.app.ActionBar
 import android.os.Bundle
+import android.text.Layout
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -44,13 +48,13 @@ class VenueDetailsActivity : AppCompatActivity() {
         val viewModelFactory = VenueDetailsViewModelFactory(
             getVenueDetailsUseCase,
             Dispatchers.IO,
-            Dispatchers.Main,
-            ConnectivityHelper.isConnectedToNetwork(this)
+            Dispatchers.Main
         )
         viewModel = ViewModelProvider(this, viewModelFactory).get(VenueDetailsViewModel::class.java)
         dataBinding.lifecycleOwner = this
 
-        viewModel.searchVenue(venueID)
+        viewModel.searchVenue(venueID,
+            ConnectivityHelper.isConnectedToNetwork(this))
 
         viewModel.venueDetailsLiveData.observe(this, Observer {
             val venueDetails = viewModel.venueDetailsLiveData.value
@@ -60,18 +64,23 @@ class VenueDetailsActivity : AppCompatActivity() {
                     val group = venueDetails.photos.groups[0]
                     if (!group.items.isNullOrEmpty()) {
                         val item = group.items[0]
-                        val imguri = item.prefix + "300x500" + item.suffix
+                        val imguri = item.prefix + AppConstants.IMAGE_SIZE + item.suffix
                         dataBinding.venuePhotosImageView.setImageURI(imguri)
                     }
                 }
-                dataBinding.title.text = venueDetails.name
+                dataBinding.venueTitle.text = venueDetails.name
+                dataBinding.descriptionTitle.text = resources.getString(R.string.description_label)
                 dataBinding.descriptionValue.text = venueDetails.description
+                dataBinding.contactInfoTitle.text = resources.getString(R.string.contact_information_label)
                 dataBinding.contactInfoValue.text = venueDetails.contact.phone
+                dataBinding.addressTitle.text = resources.getString(R.string.address_label)
                 dataBinding.addressValue.text = venueDetails.location.address
+                dataBinding.ratingTitle.text = resources.getString(R.string.ratings_label)
                 dataBinding.ratingValue.text = venueDetails.rating.toString()
 
             } else {
-                dataBinding.title.text = getString(R.string.venue_details_not_available)
+                dataBinding.venuePhotosImageView.visibility = View.GONE
+                dataBinding.venueTitle.text = getString(R.string.venue_details_not_available)
             }
         })
     }

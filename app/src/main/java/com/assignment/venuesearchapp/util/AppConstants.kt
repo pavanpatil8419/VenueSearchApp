@@ -17,5 +17,7 @@ class AppConstants {
         const val SEARCH_RADIUS = "1000"
 
         const val API_VERSION_VALID_DATE = "20201231"
+
+        const val IMAGE_SIZE = "300x500"
     }
 }
