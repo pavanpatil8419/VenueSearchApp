@@ -1,10 +1,8 @@
 package com.assignment.venuesearchapp.presentation.venue.details
 
-import android.app.ActionBar
 import android.os.Bundle
-import android.text.Layout
 import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -13,6 +11,7 @@ import com.assignment.venuesearchapp.R
 import com.assignment.venuesearchapp.data.api.RemoteAPIService
 import com.assignment.venuesearchapp.data.api.RetrofitInstance
 import com.assignment.venuesearchapp.data.db.VenueDatabase
+import com.assignment.venuesearchapp.data.model.ErrorResponse
 import com.assignment.venuesearchapp.data.repositorydatasource.VenueLocalDataSourceImpl
 import com.assignment.venuesearchapp.data.repositorydatasource.VenueRemoteDataSourceImpl
 import com.assignment.venuesearchapp.data.repositorydatasource.VenueRepositoryImpl
@@ -59,7 +58,7 @@ class VenueDetailsActivity : AppCompatActivity() {
         viewModel.venueDetailsLiveData.observe(this, Observer {
             val venueDetails = viewModel.venueDetailsLiveData.value
             if (venueDetails != null) {
-
+                //TODO:: Iterate through the photos and show in i.e.viewpager
                 if (!venueDetails.photos.groups.isNullOrEmpty()) {
                     val group = venueDetails.photos.groups[0]
                     if (!group.items.isNullOrEmpty()) {
@@ -83,5 +82,25 @@ class VenueDetailsActivity : AppCompatActivity() {
                 dataBinding.venueTitle.text = getString(R.string.venue_details_not_available)
             }
         })
+
+        viewModel.errorInfo.observe(this, Observer {
+            showErrorToast(it)
+        })
+    }
+
+    private fun showErrorToast(error:ErrorResponse){
+        var errorString:String ? = null
+        if(AppConstants.ERROR_TYPE_NETWOTK_ERROR == error.meta.errorType){
+            errorString = resources.getString(R.string.network_error_msg)
+            errorString.let {
+                if(viewModel.venueDetailsLiveData.value != null){
+                    Toast.makeText(this, getString(R.string.network_unavailable_venue_details_fetched_from_local_db), Toast.LENGTH_LONG).show()
+                }else{
+                    dataBinding.venueTitle.text= errorString
+                }
+            }
+        }else{
+            dataBinding.venueTitle.text= error.meta.errorDetail
+        }
     }
 }

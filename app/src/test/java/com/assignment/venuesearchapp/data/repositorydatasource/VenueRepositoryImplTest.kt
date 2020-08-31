@@ -7,6 +7,7 @@ import com.assignment.venuesearchapp.data.model.venues.Venue
 import com.assignment.venuesearchapp.util.AppConstants
 import io.mockk.*
 import kotlinx.coroutines.test.runBlockingTest
+import okhttp3.ResponseBody
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -14,8 +15,8 @@ import retrofit2.Response
 
 class VenueRepositoryImplTest {
 
-    private lateinit var remoteDataSource: VenueRemoteDataSourceImpl
-    private lateinit var localDataSource: VenueLocalDataSourceImpl
+    private lateinit var remoteDataSource: VenueRemoteDataSource
+    private lateinit var localDataSource: VenueLocalDataSource
     private lateinit var venueRepositoryImpl: VenueRepositoryImpl
 
     private val searchText = "SearchText"
@@ -78,7 +79,7 @@ class VenueRepositoryImplTest {
         }
 
         coVerify { localDataSource.updateVenueDetailsById(any(),any()) }
-        assertEquals(captureVenueId.captured, searchText)
+        assertEquals(captureVenueId.captured, venueId)
         assertNotNull(response)
     }
 
@@ -155,11 +156,11 @@ class VenueRepositoryImplTest {
     private fun searchVenuesFailure(){
         coEvery { remoteDataSource.searchVenues(any(),any(),any())} returns searchResultResponse
         coEvery { searchResultResponse.isSuccessful } returns  false
-        coEvery { searchResultResponse.errorBody().toString()} returns errorResponse
+        coEvery { venueDetailsResponse.errorBody()?.string()} returns errorResponse
     }
     private fun venueDetailsFailure(){
         coEvery { remoteDataSource.getVenueDetails(any())} returns venueDetailsResponse
         coEvery { venueDetailsResponse.isSuccessful } returns  false
-        coEvery { venueDetailsResponse.errorBody().toString()} returns errorResponse
+        coEvery { venueDetailsResponse.errorBody()?.string()} returns errorResponse
     }
 }

@@ -19,5 +19,8 @@ class AppConstants {
         const val API_VERSION_VALID_DATE = "20201231"
 
         const val IMAGE_SIZE = "300x500"
+
+        const val ERROR_TYPE_NETWOTK_ERROR = "network_error"
+
     }
 }

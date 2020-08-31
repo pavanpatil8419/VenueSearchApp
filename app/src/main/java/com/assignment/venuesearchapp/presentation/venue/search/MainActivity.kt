@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -15,6 +16,7 @@ import com.assignment.venuesearchapp.R
 import com.assignment.venuesearchapp.data.api.RemoteAPIService
 import com.assignment.venuesearchapp.data.api.RetrofitInstance
 import com.assignment.venuesearchapp.data.db.VenueDatabase
+import com.assignment.venuesearchapp.data.model.ErrorResponse
 import com.assignment.venuesearchapp.data.model.venues.Venue
 import com.assignment.venuesearchapp.data.repositorydatasource.VenueLocalDataSourceImpl
 import com.assignment.venuesearchapp.data.repositorydatasource.VenueRemoteDataSourceImpl
@@ -73,6 +75,10 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
+        viewModel.errorInfo.observe(this, Observer {
+            showErrorToast(it)
+        })
         initRecyclerView()
     }
 
@@ -116,4 +122,21 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(AppConstants.VENUE_ID, venue.id)
         startActivity(intent)
     }
+
+    private fun showErrorToast(error:ErrorResponse){
+        var errorString:String ? = null
+        if(AppConstants.ERROR_TYPE_NETWOTK_ERROR == error.meta.errorType){
+            errorString = resources.getString(R.string.network_error_msg)
+            errorString.let {
+                if(viewModel.venueListData.value != null){
+                    Toast.makeText(this, getString(R.string.network_unavailable_last_search_results_displayed_from_local_db), Toast.LENGTH_LONG).show()
+                }else{
+                    Toast.makeText(this, errorString, Toast.LENGTH_LONG).show()
+                }
+            }
+        }else {
+            dataBinding.emptyTextView.text = error.meta.errorDetail
+        }
+    }
+
 }

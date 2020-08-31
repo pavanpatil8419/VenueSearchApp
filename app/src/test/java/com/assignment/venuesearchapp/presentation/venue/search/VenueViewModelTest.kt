@@ -33,7 +33,7 @@ class VenueViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        venueViewModel = VenueViewModel(useCaseMock, dispatcher, dispatcher, isNetworkAvailable)
+        venueViewModel = VenueViewModel(useCaseMock, dispatcher, dispatcher)
 
     }
 
@@ -41,7 +41,7 @@ class VenueViewModelTest {
     fun `venue use case search near by venues called only once success`() {
         coEvery { useCaseMock.searchNearByVenues(any(), any(),any(), isNetworkAvailable) } returns listOf()
         venueViewModel.venueListData.observeForever {}
-        venueViewModel.searchVenue(searchText)
+        venueViewModel.searchVenue(searchText, isNetworkAvailable)
         coVerify (exactly = 1) {
             (useCaseMock.searchNearByVenues(any(),any(), any(),isNetworkAvailable))
         }
@@ -54,7 +54,7 @@ class VenueViewModelTest {
             Venue("2", "Venue_2", location = mockk())
         )
         venueViewModel.venueListData.observeForever {}
-        venueViewModel.searchVenue(searchText)
+        venueViewModel.searchVenue(searchText, isNetworkAvailable)
         assertEquals(venueViewModel.venueListData.value?.size, 2)
     }
 
@@ -62,7 +62,7 @@ class VenueViewModelTest {
     fun `search venues response failure`() {
         coEvery { useCaseMock.searchNearByVenues(any(), any(),any(),isNetworkAvailable) } returns listOf()
         venueViewModel.venueListData.observeForever {}
-        venueViewModel.searchVenue(searchText)
+        venueViewModel.searchVenue(searchText, isNetworkAvailable)
         assertEquals(venueViewModel.venueListData.value?.size, 0)
     }
 
@@ -71,7 +71,7 @@ class VenueViewModelTest {
         coEvery { useCaseMock.searchNearByVenues(any(), any(),any(),isNetworkAvailable) } returns listOf()
 
         venueViewModel.venueListData.observeForever {}
-        venueViewModel.searchVenue(searchText)
+        venueViewModel.searchVenue(searchText, isNetworkAvailable)
 
         val searchTextSlot = slot<String>()
         val radiusSlot = slot<String>()

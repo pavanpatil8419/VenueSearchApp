@@ -1,9 +1,7 @@
 package com.assignment.venuesearchapp.presentation.venue.search
 
-import android.content.Context
 import com.assignment.venuesearchapp.data.model.venues.Venue
 import io.mockk.*
-import io.mockk.impl.annotations.MockK
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

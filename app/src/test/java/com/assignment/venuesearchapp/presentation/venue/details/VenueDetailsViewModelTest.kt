@@ -38,7 +38,7 @@ class VenueDetailsViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        venueDetailsViewModel = VenueDetailsViewModel(useCaseMock, dispatcher, dispatcher,isNetworkAvailable)
+        venueDetailsViewModel = VenueDetailsViewModel(useCaseMock, dispatcher, dispatcher)
         coEvery { ConnectivityHelper.isConnectedToNetwork(application)} returns true
     }
 
@@ -46,7 +46,7 @@ class VenueDetailsViewModelTest {
     fun `venue use case search near by venues called only once success`() {
         coEvery { useCaseMock.getVenueDetails(any(),isNetworkAvailable) } returns mockk()
         venueDetailsViewModel.venueDetailsLiveData.observeForever {}
-        venueDetailsViewModel.searchVenue(venueId)
+        venueDetailsViewModel.searchVenue(venueId,isNetworkAvailable)
         coVerify(exactly = 1) {
             (useCaseMock.getVenueDetails(any(),isNetworkAvailable))
         }
@@ -64,7 +64,7 @@ class VenueDetailsViewModelTest {
             ""
         )
         venueDetailsViewModel.venueDetailsLiveData.observeForever {}
-        venueDetailsViewModel.searchVenue(venueId)
+        venueDetailsViewModel.searchVenue(venueId, isNetworkAvailable)
         assertEquals(venueDetailsViewModel.venueDetailsLiveData.value?.id, venueId)
         assertEquals(venueDetailsViewModel.venueDetailsLiveData.value?.name, "Test Venue")
     }
@@ -73,7 +73,7 @@ class VenueDetailsViewModelTest {
     fun `venues details response failure`() {
         coEvery { useCaseMock.getVenueDetails(any(),isNetworkAvailable) } returns null
         venueDetailsViewModel.venueDetailsLiveData.observeForever {}
-        venueDetailsViewModel.searchVenue(venueId)
+        venueDetailsViewModel.searchVenue(venueId, isNetworkAvailable)
         assertEquals(venueDetailsViewModel.venueDetailsLiveData.value, null)
     }
 
@@ -82,7 +82,7 @@ class VenueDetailsViewModelTest {
         coEvery { useCaseMock.getVenueDetails(any(),isNetworkAvailable) } returns mockk()
 
         venueDetailsViewModel.venueDetailsLiveData.observeForever {}
-        venueDetailsViewModel.searchVenue(venueId)
+        venueDetailsViewModel.searchVenue(venueId, isNetworkAvailable)
         val venueId = slot<String>()
         coVerify { useCaseMock.getVenueDetails(capture(venueId),isNetworkAvailable) }
         assertEquals(venueId.captured, this.venueId)

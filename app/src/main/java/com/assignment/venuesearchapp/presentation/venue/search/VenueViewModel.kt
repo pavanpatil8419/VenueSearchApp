@@ -3,6 +3,7 @@ package com.assignment.venuesearchapp.presentation.venue.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.assignment.venuesearchapp.data.model.ErrorResponse
 import com.assignment.venuesearchapp.data.model.venues.Venue
 import com.assignment.venuesearchapp.domain.usecase.SearchVenueUseCase
 import com.assignment.venuesearchapp.util.AppConstants
@@ -17,6 +18,10 @@ class VenueViewModel(
     private var venueList = MutableLiveData<List<Venue>>()
     val venueListData: LiveData<List<Venue>>
         get() = venueList
+
+    private var error = MutableLiveData<ErrorResponse>()
+    val errorInfo: LiveData<ErrorResponse>
+        get() = error
 
     private val job = SupervisorJob()
     private val ioScope = CoroutineScope(ioDispatcher + job)
@@ -38,6 +43,7 @@ class VenueViewModel(
                     )
                 }.await()
                 venueList.value = data
+                error.value = searchVenueUseCase.getErrorInfo()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

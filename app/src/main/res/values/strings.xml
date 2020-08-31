@@ -9,4 +9,7 @@
     <string name="ratings_label">Rating</string>
     <string name="venue_details_not_available">Venue details not available. Pls try again later</string>
     <string name="please_wait">Please wait</string>
+    <string name="network_error_msg">Network not available</string>
+    <string name="network_unavailable_venue_details_fetched_from_local_db">Network not available. Venue Details fetched from local database</string>
+    <string name="network_unavailable_last_search_results_displayed_from_local_db">Network not available. Last Search results displayed from local database</string>
 </resources>

@@ -2,11 +2,13 @@ package com.assignment.venuesearchapp.data.repositorydatasource
 
 import android.util.Log
 import com.assignment.venuesearchapp.data.model.ErrorResponse
+import com.assignment.venuesearchapp.data.model.Meta
 import com.assignment.venuesearchapp.data.model.venue.details.VenueDetails
 import com.assignment.venuesearchapp.data.model.venue.details.VenueDetailsResponse
 import com.assignment.venuesearchapp.data.model.venues.SearchResult
 import com.assignment.venuesearchapp.data.model.venues.Venue
 import com.assignment.venuesearchapp.domain.repository.VenueRepository
+import com.assignment.venuesearchapp.util.AppConstants
 import com.google.gson.GsonBuilder
 import retrofit2.Response
 
@@ -16,7 +18,7 @@ class VenueRepositoryImpl(
     private val localDataSource: VenueLocalDataSource
 ) : VenueRepository {
 
-    private lateinit var errorResponse: ErrorResponse
+    private var errorResponse: ErrorResponse? = null
 
     override suspend fun searchNearByVenues(
         near: String,
@@ -25,6 +27,8 @@ class VenueRepositoryImpl(
         isNetworkAvailable: Boolean
 
     ): List<Venue> {
+        //reset the error object for every new request
+        errorResponse = null
         return if (isNetworkAvailable) {
             fetchNearByVenuesFromRemoteAPI(
                 near,
@@ -34,6 +38,7 @@ class VenueRepositoryImpl(
                 localDataSource
             )
         } else {
+            setNetworkErrorResponse()
             localDataSource.getSavedVenuesFromDB()
         }
     }
@@ -51,7 +56,10 @@ class VenueRepositoryImpl(
             if (response.isSuccessful) {
                 venueList = searchVenueSuccessResponse(response, localDataSource)
             } else {
-                errorResponse = errorResponse(response.errorBody().toString())
+                val rawError  = response.errorBody()
+                rawError?.let {
+                    errorResponse = errorResponse(rawError.string())
+                }
             }
         } catch (exception: Exception) {
             exception.printStackTrace()
@@ -76,13 +84,12 @@ class VenueRepositoryImpl(
         lateinit var errorResponse: ErrorResponse
         errorString.let {
             val gson = GsonBuilder().create()
-            errorResponse =
-                gson.fromJson(errorString, ErrorResponse::class.java)
+            errorResponse = gson.fromJson(errorString, ErrorResponse::class.java)
             errorResponse.let {
                 Log.i(
-                    "Error Response:: ",
-                    " Code - ${it.meta.code} " +
-                            "Error Details - ${it.meta.errorDetail} " +
+                    "ErrorResponse:: ",
+                    " Code - ${it.meta.code} , " +
+                            "Error Details - ${it.meta.errorDetail} , " +
                             "ErrorType -${it.meta.errorType} "
                 )
             }
@@ -94,12 +101,20 @@ class VenueRepositoryImpl(
         venueId: String,
         isNetworkAvailable: Boolean
     ): VenueDetails? {
+        //reset error object for every new request
+        errorResponse = null
         return if (isNetworkAvailable) {
             fetchVenueDetailsFromRemoteAPI(venueId, remoteDataSource, localDataSource)
         } else {
+            setNetworkErrorResponse()
+            //try to fetch venue details from DB if available
             val venue: Venue = localDataSource.getVenueDetailsById(venueId)
             venue.venue_details
         }
+    }
+
+    override fun getErrorInfo(): ErrorResponse? {
+        return errorResponse
     }
 
     suspend fun fetchVenueDetailsFromRemoteAPI(
@@ -112,7 +127,10 @@ class VenueRepositoryImpl(
             return if (response.isSuccessful) {
                 venueDetailsSuccessResponse(venueId, response, localDataSource)
             } else {
-                errorResponse = errorResponse(response.errorBody().toString())
+                val rawError  = response.errorBody()
+                rawError?.let {
+                    errorResponse = errorResponse(rawError.string())
+                }
                 null
             }
         } catch (exception: Exception) {
@@ -132,5 +150,8 @@ class VenueRepositoryImpl(
             return it.response.venueDetails
         }
         return null
+    }
+    private fun setNetworkErrorResponse(){
+        errorResponse = ErrorResponse(Meta(-1,AppConstants.ERROR_TYPE_NETWOTK_ERROR,"", "" ))
     }
 }
