@@ -18,21 +18,4 @@ data class VenueDetails(
     val photos: Photos,
     @SerializedName("description")
     val description: String
-
-//    @SerializedName("canonicalUrl")
-//    val canonicalUrl: String,
-//    @SerializedName("categories")
-//    val categories: List<Category>,
-//    @SerializedName("verified")
-//    val verified: Boolean,
-//    @SerializedName("url")
-//    val url: String,
-//    @SerializedName("likes")
-//    val likes: Likes,
-//    @SerializedName("ratingColor")
-//    val ratingColor: String,
-//    @SerializedName("ratingSignals")
-//    val ratingSignals: Int,
-//    @SerializedName("storeId")
-//    val storeId: String,
 )

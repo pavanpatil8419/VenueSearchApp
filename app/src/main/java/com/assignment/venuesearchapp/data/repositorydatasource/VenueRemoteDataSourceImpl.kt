@@ -1,5 +1,6 @@
 package com.assignment.venuesearchapp.data.repositorydatasource
 
+import android.util.Log
 import com.assignment.venuesearchapp.data.api.RemoteAPIService
 import com.assignment.venuesearchapp.data.model.venue.details.VenueDetailsResponse
 import com.assignment.venuesearchapp.data.model.venues.SearchResult
@@ -22,8 +23,7 @@ class VenueRemoteDataSourceImpl(
             limitResults,
             AppConstants.CLIENT_ID,
             AppConstants.CLIENT_SECRET,
-            AppConstants.API_VERSION_VALID_DATE
-        )
+            AppConstants.API_VERSION_VALID_DATE)
     }
 
     override suspend fun getVenueDetails(venueId: String): Response<VenueDetailsResponse> {

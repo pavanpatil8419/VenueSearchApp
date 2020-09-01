@@ -56,7 +56,7 @@ class VenueRepositoryImpl(
             if (response.isSuccessful) {
                 venueList = searchVenueSuccessResponse(response, localDataSource)
             } else {
-                val rawError  = response.errorBody()
+                val rawError = response.errorBody()
                 rawError?.let {
                     errorResponse = errorResponse(rawError.string())
                 }
@@ -127,7 +127,7 @@ class VenueRepositoryImpl(
             return if (response.isSuccessful) {
                 venueDetailsSuccessResponse(venueId, response, localDataSource)
             } else {
-                val rawError  = response.errorBody()
+                val rawError = response.errorBody()
                 rawError?.let {
                     errorResponse = errorResponse(rawError.string())
                 }
@@ -151,7 +151,8 @@ class VenueRepositoryImpl(
         }
         return null
     }
-    private fun setNetworkErrorResponse(){
-        errorResponse = ErrorResponse(Meta(-1,AppConstants.ERROR_TYPE_NETWOTK_ERROR,"", "" ))
+
+    private fun setNetworkErrorResponse() {
+        errorResponse = ErrorResponse(Meta(-1, AppConstants.ERROR_TYPE_NETWOTK_ERROR, "", ""))
     }
 }

@@ -7,7 +7,7 @@ import java.io.Serializable
 
 class VenueDetailsConverter : Serializable {
 
-    @TypeConverter // note this annotation
+    @TypeConverter
     fun fromVenueDetails(venueDetailsObj: VenueDetails?): String? {
         if (venueDetailsObj == null) {
             return null
@@ -17,7 +17,7 @@ class VenueDetailsConverter : Serializable {
         return gson.toJson(venueDetailsObj, type)
     }
 
-    @TypeConverter // note this annotation
+    @TypeConverter
     fun toVenueDetails(venueDetailsValueString: String?): VenueDetails? {
         if (venueDetailsValueString == null) {
             return null

@@ -7,7 +7,7 @@ import java.io.Serializable
 
 class ItemListTypeConverter: Serializable {
 
-    @TypeConverter // note this annotation
+    @TypeConverter
     fun fromItemValuesList(items: List<Item> ):String? {
         if (items == null) {
             return (null)
@@ -17,7 +17,7 @@ class ItemListTypeConverter: Serializable {
         return gson.toJson(items, type)
     }
 
-    @TypeConverter // note this annotation
+    @TypeConverter
     fun toItemValueList(itemListValueString: String?): List<Item>? {
         if (itemListValueString == null) {
             return null

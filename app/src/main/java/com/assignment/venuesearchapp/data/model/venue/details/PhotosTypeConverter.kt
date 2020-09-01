@@ -7,7 +7,7 @@ import java.io.Serializable
 
 class PhotosTypeConverter : Serializable{
 
-    @TypeConverter // note this annotation
+    @TypeConverter
     fun fromPhotos(photos: Photos?): String? {
         if (photos == null) {
             return null
@@ -17,7 +17,7 @@ class PhotosTypeConverter : Serializable{
         return gson.toJson(photos, type)
     }
 
-    @TypeConverter // note this annotation
+    @TypeConverter
     fun toPhotos(photosValueString: String?): Photos? {
         if (photosValueString == null) {
             return null

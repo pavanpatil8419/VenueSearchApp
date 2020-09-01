@@ -6,7 +6,7 @@ import com.google.gson.reflect.TypeToken
 import java.io.Serializable
 
 class LocationObjConverter : Serializable {
-        @TypeConverter // note this annotation
+        @TypeConverter
         fun fromLocation(locationValue: Location?): String? {
             if (locationValue == null) {
                 return null
@@ -16,7 +16,7 @@ class LocationObjConverter : Serializable {
             return gson.toJson(locationValue, type)
         }
 
-        @TypeConverter // note this annotation
+        @TypeConverter
         fun toLocation(locationValueString: String?): Location? {
             if (locationValueString == null) {
                 return null

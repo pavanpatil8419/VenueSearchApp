@@ -33,8 +33,7 @@ class VenueDetailsActivity : AppCompatActivity() {
         dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_venue_details)
 
         val databaseDAO = VenueDatabase.getInstance(this).getVenueDAO()
-        val apiService = RetrofitInstance.getRetrofitInstance(AppConstants.BASE_API_URL)
-            .create(RemoteAPIService::class.java)
+        val apiService = RetrofitInstance.getRetrofitInstance(AppConstants.BASE_API_URL)!!.create(RemoteAPIService::class.java)
         val repository = VenueRepositoryImpl(
             VenueRemoteDataSourceImpl(
                 AppConstants.CLIENT_ID,
@@ -89,7 +88,7 @@ class VenueDetailsActivity : AppCompatActivity() {
     }
 
     private fun showErrorToast(error:ErrorResponse){
-        var errorString:String ? = null
+        var errorString:String
         if(AppConstants.ERROR_TYPE_NETWOTK_ERROR == error.meta.errorType){
             errorString = resources.getString(R.string.network_error_msg)
             errorString.let {

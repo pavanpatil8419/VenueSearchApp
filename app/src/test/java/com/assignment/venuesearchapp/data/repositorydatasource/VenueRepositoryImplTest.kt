@@ -6,8 +6,8 @@ import com.assignment.venuesearchapp.data.model.venues.SearchResult
 import com.assignment.venuesearchapp.data.model.venues.Venue
 import com.assignment.venuesearchapp.util.AppConstants
 import io.mockk.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import okhttp3.ResponseBody
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -40,6 +40,7 @@ class VenueRepositoryImplTest {
     }
 
     @Test
+    @ExperimentalCoroutinesApi
     fun `venue details network not available`() = runBlockingTest{
         coEvery{localDataSource.getVenueDetailsById(venueId)} returns Venue (
             venueId,
@@ -53,6 +54,7 @@ class VenueRepositoryImplTest {
     }
 
     @Test
+    @ExperimentalCoroutinesApi
     fun `search venue network not available`() = runBlockingTest{
         coEvery{localDataSource.getSavedVenuesFromDB()} returns listOf(
                 Venue("1", "Venue_1", location = mockk()),
@@ -65,6 +67,7 @@ class VenueRepositoryImplTest {
 
     }
     @Test
+    @ExperimentalCoroutinesApi
     fun `venues details remote api call success`() = runBlockingTest {
         venueDetailsSuccessResponse()
         val response = venueRepositoryImpl.getVenueDetails(venueId,true)
@@ -84,7 +87,7 @@ class VenueRepositoryImplTest {
     }
 
     @Test
-    @Throws(Exception::class)
+    @ExperimentalCoroutinesApi
     fun `search venues remote api call success`() = runBlockingTest {
         searchVenueSuccessResponse()
         val response = venueRepositoryImpl.searchNearByVenues(searchText, radius, limit, true)
@@ -115,6 +118,7 @@ class VenueRepositoryImplTest {
     }
 
     @Test
+    @ExperimentalCoroutinesApi
     fun `search venues remote api call failure`() = runBlockingTest {
         searchVenuesFailure()
         val response = venueRepositoryImpl.searchNearByVenues(searchText, radius, limit, true)
@@ -122,6 +126,7 @@ class VenueRepositoryImplTest {
     }
 
     @Test
+    @ExperimentalCoroutinesApi
     fun `venues details remote api call failure`() = runBlockingTest {
         venueDetailsFailure()
         val response = venueRepositoryImpl.getVenueDetails(searchText, true)
